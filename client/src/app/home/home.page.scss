@@ -1,0 +1,49 @@
+.header {
+  width: 100vw;
+  height: 7vh;
+
+  ion-toolbar {
+    height: 7vh;
+  }
+}
+
+.body {
+  width: 100vw;
+  height: 93vh;
+
+  .chat-layer {
+    height: 93vh;
+  }
+  
+  .chat-messages {
+    width: 100vw;
+    height: 80vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 15px;
+  }
+  
+  .send-message-container {
+    padding: 15px;
+    margin: 0;
+  
+    ion-icon {
+      margin-left: 10px;
+    }
+  }
+
+  .leaderboard-layer {
+    height: 150px;
+    width: 100px;
+    position: absolute;
+    border: 1px solid;
+    border-color: white;
+    top: 7vh;
+    right: 0;
+  }
+
+  .separator {
+    background-color: white;
+  }
+}
+

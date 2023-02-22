@@ -1,0 +1,22 @@
+<ion-header [translucent]="true" class="header">
+  <ion-toolbar>
+    <ion-title>
+      Chat
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="body">
+  <div class="chat-layer">
+    <ul class="chat-messages"></ul>
+    <hr class="separator">
+    <div class="send-message-container">
+      <input [(ngModel)]="message"  class="send-message-input" placeholder="Enter message...">
+      <ion-icon name="send"></ion-icon>
+    </div>
+  </div>
+
+  <div class="leaderboard-layer">
+    <ul class="leaderboard-list"></ul>
+  </div>
+</ion-content>
