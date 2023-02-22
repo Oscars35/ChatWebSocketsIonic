@@ -1,0 +1,7 @@
+{
+  "name": "ChatWebSockets",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
