@@ -10,6 +10,7 @@ import * as $ from 'jquery';
 })
 export class HomePage {
 
+  leaderBoard: any[] = [];
   userList: any[] = [];
   messages: any[] = []
   message: string;
@@ -23,7 +24,7 @@ export class HomePage {
       this.myName = "";
       while (this.myName == "") this.myName = prompt("Enter your name");
       this.sendMessage("join", this.myName);
-      setInterval(() => { this.socket.send(JSON.stringify({type: "update", data: name})); }, 3000);
+      setInterval(() => { this.socket.send(JSON.stringify({type: "update", data: this.myName})); }, 3000);
     }
 
     this.socket.onmessage = (msg) => { 
@@ -54,6 +55,7 @@ export class HomePage {
     else if (msg.msgType == "left") {
       this.messages.push({user: null, data: msg.data.name + ' left chat'})
       this.userList = this.userList.filter(user => user.name !== msg.data.name);
+      this.leaderBoard = this.leaderBoard.filter(user => user.name != msg.data.name)
       console.log(this.userList.filter(user => user.name !== msg.data.name));
     }
     else if (msg.msgType == "update") {
@@ -67,14 +69,12 @@ export class HomePage {
   }
 
   updateLeaderboard(user: any) {
-    console.log("updateLeader");
-    if (document.getElementById("user-"+user.id+"leaderboard")) {
-        //let previousScore = document.getElementById("user-"+user.name+"leaderboard").innerHTML.split(" ")[1];
-        //console.log(previousScore);
-        document.getElementById("user-"+user.id+"leaderboard")!!.innerHTML = "" + user.name + ": " + user.score
+    let userBoard = this.leaderBoard.filter(userSearch => userSearch.name === user.name);
+    if (userBoard.length != 0) {
+        this.leaderBoard[this.leaderBoard.indexOf(userBoard[0])] = user;
     }
     else {
-        $("#leaderboard-list").append("<li id='user-"+user.id+"leaderboard'>"+user.name+": "+user.score+"</li>");
+        this.leaderBoard.push(user);
     }
   }
 

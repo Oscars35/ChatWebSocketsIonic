@@ -30,7 +30,12 @@
   </div>
 
   <div class="leaderboard-layer">
-    <ul class="leaderboard-list" id="leaderboard-list"></ul>
+    <ul class="leaderboard-list" id="leaderboard-list">
+      <ng-container class="leaderboard-container" *ngFor="let user of leaderBoard">
+          <li id='user-score'> {{user.name + ": "+ user.score }}</li>
+      </ng-container>
+      
+    </ul>
   </div>
 
   <div class="leavechat-container">
