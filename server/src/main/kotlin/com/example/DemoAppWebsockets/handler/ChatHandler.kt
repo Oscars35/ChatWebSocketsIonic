@@ -16,6 +16,7 @@ class User(val id: Long, val name: String, var score: Int) {
     }
 }
 class Message(val msgType: String, val data: Any)
+class ChatMessage(val msgType: String, val data: Any, val user: User);
 
 class ChatHandler : TextWebSocketHandler() {
 
@@ -40,7 +41,8 @@ class ChatHandler : TextWebSocketHandler() {
                 broadcastToOthers(session, Message("join", user))
             }
             "say" -> {
-                broadcast(Message("say", json.get("data").asText()))
+                val user = this.sessionList[session]
+                broadcast(ChatMessage("say", json.get("data").asText(), user!!))
             }
             "update" -> {
                 val user = this.sessionList[session]?.updateScore()
@@ -50,10 +52,18 @@ class ChatHandler : TextWebSocketHandler() {
                 //Tell me about the others score
                 emit(session, Message("update", user));
             }
+
+          "left" -> {
+            val user = this.sessionList[session];
+            //Tell the others about my leaving
+            broadcastToOthers(session, Message("left", user!!))
+          }
         }
     }
 
     fun emit(session: WebSocketSession, msg: Message) = session.sendMessage(TextMessage(jacksonObjectMapper().writeValueAsString(msg)))
+    fun emit(session: WebSocketSession, msg: ChatMessage) = session.sendMessage(TextMessage(jacksonObjectMapper().writeValueAsString(msg)))
     fun broadcast(msg: Message) = sessionList.forEach { emit(it.key, msg) }
+    fun broadcast(msg: ChatMessage) = sessionList.forEach { emit(it.key, msg) }
     fun broadcastToOthers(me: WebSocketSession, msg: Message) = sessionList.filterNot { it.key == me }.forEach { emit(it.key, msg) }
 }
