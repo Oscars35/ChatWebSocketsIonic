@@ -8,6 +8,7 @@
 }
 
 .body {
+  --keyboard-offset: 0 !important;
   width: 100vw;
   height: 93vh;
 
@@ -32,14 +33,26 @@
     }
   }
 
-  .leaderboard-layer {
-    height: 150px;
+  .user-layer {
+    height: 20vh;
     width: 100px;
     position: absolute;
     border: 1px solid;
     border-color: white;
     top: 7vh;
     right: 0;
+    overflow: scroll;
+  }
+
+  .leaderboard-layer {
+    height: 20vh;
+    width: 100px;
+    position: absolute;
+    border: 1px solid;
+    border-color: white;
+    top: 27vh;
+    right: 0;
+    overflow: scroll;
   }
 
   .separator {

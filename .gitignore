@@ -68,6 +68,6 @@ testem.log
 Thumbs.db
 
 .angular/*
-/.angular
-/.angular/*
-/.angular
+/client/.angular
+/client/.angular/*
+/client/.angular

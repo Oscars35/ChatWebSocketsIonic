@@ -11,12 +11,17 @@
     <ul class="chat-messages"></ul>
     <hr class="separator">
     <div class="send-message-container">
-      <input [(ngModel)]="message"  class="send-message-input" placeholder="Enter message...">
+      <input [(ngModel)]="message" (click)="sendMessage('say', message)"  class="send-message-input" placeholder="Enter message...">
       <ion-icon name="send"></ion-icon>
     </div>
   </div>
 
-  <div class="leaderboard-layer">
-    <ul class="leaderboard-list"></ul>
+  <div class="user-layer">
+    <ul class="user-list" id="user-list"></ul>
   </div>
+
+  <div class="leaderboard-layer">
+    <ul class="leaderboard-list" id="leaderboard-list"></ul>
+  </div>
+  
 </ion-content>
