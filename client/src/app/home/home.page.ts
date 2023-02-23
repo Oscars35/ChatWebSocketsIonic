@@ -10,6 +10,7 @@ import * as $ from 'jquery';
 })
 export class HomePage {
 
+  userList: any[] = [];
   messages: any[] = []
   message: string;
   socket: WebSocket;
@@ -51,9 +52,9 @@ export class HomePage {
       msg.data.forEach((el: any) => { this.addUser(el); });
     }
     else if (msg.msgType == "left") {
-      $("#user-"+msg.data.id).remove();
-      this.messages.push({user: msg.data, data: ' left chat'})
-      $("#user-"+msg.data.id+"leaderboard").remove();
+      this.messages.push({user: null, data: msg.data.name + ' left chat'})
+      this.userList = this.userList.filter(user => user.name !== msg.data.name);
+      console.log(this.userList.filter(user => user.name !== msg.data.name));
     }
     else if (msg.msgType == "update") {
       this.updateLeaderboard(msg.data);
@@ -61,7 +62,7 @@ export class HomePage {
   }
 
   addUser(user: any) {
-    $("#user-list").append("<li id='user-"+user.id+"'>"+user.name+"</li>");
+    this.userList.push(user);
     this.messages.push({user: null, data: user.name + " joined chat"});
   }
 

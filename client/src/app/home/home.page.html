@@ -22,7 +22,11 @@
   </div>
 
   <div class="user-layer">
-    <ul class="user-list" id="user-list"></ul>
+    <ul class="user-list" id="user-list">
+      <ng-container *ngFor="let user of userList">
+        <li id='user-"+user.id+"'>{{user.name}}</li>
+      </ng-container>
+    </ul>
   </div>
 
   <div class="leaderboard-layer">
