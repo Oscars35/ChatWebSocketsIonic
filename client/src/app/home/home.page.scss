@@ -55,6 +55,25 @@
     overflow: scroll;
   }
 
+  .leavechat-container {
+    height: 5vh;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 47vh;
+    right: 0;
+    margin-top: 5px;
+
+    button {
+      width: 100px;
+      height: 5vh;
+      border-radius: 4px;
+      border: 1px solid rgb(255, 113, 113);
+      background-color: rgb(248, 146, 146)
+    }
+  }
+
   .separator {
     background-color: white;
   }
