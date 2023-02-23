@@ -8,7 +8,12 @@
 
 <ion-content [fullscreen]="true" class="body">
   <div class="chat-layer">
-    <ul class="chat-messages"></ul>
+    <ul class="chat-messages">
+      <ng-container class="message-container" *ngFor="let message of messages">
+         <p class="message" *ngIf="message.user">{{ message.user.name + ": "  + message.data }}</p>
+         <p class="message" *ngIf="!message.user">{{ message.data }}</p>
+      </ng-container>   
+    </ul>
     <hr class="separator">
     <div class="send-message-container">
       <input [(ngModel)]="message" (click)="sendMessage('say', message)"  class="send-message-input" placeholder="Enter message...">

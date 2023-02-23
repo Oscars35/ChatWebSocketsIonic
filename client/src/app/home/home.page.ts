@@ -10,6 +10,7 @@ import * as $ from 'jquery';
 })
 export class HomePage {
 
+  messages: any[] = []
   message: string;
   socket: WebSocket;
   user: string | null;
@@ -41,7 +42,7 @@ export class HomePage {
 
   private receievMsg(msg: any) {
     if (msg.msgType == "say") {
-      $(".chat-messages").append("<p>"  + msg.user.name + ": "  +msg.data+"</p>");
+      this.messages.push(msg);
     }
     else if (msg.msgType == "join") {
       this.addUser(msg.data);
@@ -51,7 +52,7 @@ export class HomePage {
     }
     else if (msg.msgType == "left") {
       $("#user-"+msg.data.id).remove();
-      $(".chat-messages").append("<p>" + msg.data.name + ' Left chat' + "</p>");
+      this.messages.push({user: msg.data, data: ' left chat'})
       $("#user-"+msg.data.id+"leaderboard").remove();
     }
     else if (msg.msgType == "update") {
@@ -61,7 +62,7 @@ export class HomePage {
 
   addUser(user: any) {
     $("#user-list").append("<li id='user-"+user.id+"'>"+user.name+"</li>");
-    $(".chat-messages").append("<p>" + user.name + ' joined chat' + "</p>");
+    this.messages.push({user: null, data: user.name + " joined chat"});
   }
 
   updateLeaderboard(user: any) {
@@ -79,7 +80,7 @@ export class HomePage {
   leaveChat() {
     if(this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(JSON.stringify({type: "left", data: this.myName}));
-      $(".chat-messages").append("<p>You left chat</p>");
+      this.messages.push({user: null,data: "You left chat"});
       this.socket.close();
     }
   }
