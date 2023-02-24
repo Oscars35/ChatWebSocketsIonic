@@ -1,3 +1,4 @@
+import { WebsocketsService } from '../../services/websockets.service';
 import { Component } from '@angular/core';
 import { Config } from '@ionic/angular';
 import * as SockJS from 'sockjs-client';
@@ -14,29 +15,38 @@ export class HomePage {
   userList: any[] = [];
   messages: any[] = []
   message: string;
-  socket: WebSocket;
   user: string | null;
   myName: string | null;
 
-  constructor() {
-    this.socket = new SockJS('http://localhost:8080/chat');
-    this.socket.onopen = () => {
-      this.myName = "";
-      while (this.myName == "") this.myName = prompt("Enter your name");
-      this.sendMessage("join", this.myName);
-      setInterval(() => { this.socket.send(JSON.stringify({type: "update", data: this.myName})); }, 3000);
-    }
+  constructor(private webSocketService: WebsocketsService) {
+    
+  }
 
-    this.socket.onmessage = (msg) => { 
-      this.receievMsg(JSON.parse(msg.data)) 
-    }
+  ngOnInit() {
+    this.webSocketService.createSocket("http://localhost:8080/chat");
+    this.webSocketService.onOpen.subscribe( (opened) => {
+      if (opened === "opened") {
+        this.myName = "";
+        while (this.myName == "") this.myName = prompt("Enter your name");
+        this.sendMessage("join", this.myName);
+        setInterval(() => { this.webSocketService.send(JSON.stringify({type: "update", data: this.myName})) }, 3000);
+      }
+    }); 
 
-    this.socket.onclose = () => { }
+    this.webSocketService.onMessage.subscribe( (msg) => {
+      if(msg.data) {
+        this.receievMsg(JSON.parse(msg.data)) 
+      }
+    });
+
+    this.webSocketService.onClose.subscribe((_) => {
+
+    });
   }
 
   sendMessage(type: string, data: any) {
     if (data !== "") {
-        this.socket.send(JSON.stringify({type: type, data: data}));
+        this.webSocketService.send(JSON.stringify({type: type, data: data}));
         this.user = data;
         this.message = "";
     }
@@ -56,7 +66,6 @@ export class HomePage {
       this.messages.push({user: null, data: msg.data.name + ' left chat'})
       this.userList = this.userList.filter(user => user.name !== msg.data.name);
       this.leaderBoard = this.leaderBoard.filter(user => user.name != msg.data.name)
-      console.log(this.userList.filter(user => user.name !== msg.data.name));
     }
     else if (msg.msgType == "update") {
       this.updateLeaderboard(msg.data);
@@ -64,6 +73,7 @@ export class HomePage {
   }
 
   addUser(user: any) {
+    console.log(user);
     this.userList.push(user);
     this.messages.push({user: null, data: user.name + " joined chat"});
   }
@@ -79,10 +89,10 @@ export class HomePage {
   }
 
   leaveChat() {
-    if(this.socket.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify({type: "left", data: this.myName}));
+    if(this.webSocketService.isOpen()) {
+      this.webSocketService.send(JSON.stringify({type: "left", data: this.myName}));
       this.messages.push({user: null,data: "You left chat"});
-      this.socket.close();
+      this.webSocketService.close();
     }
   }
 

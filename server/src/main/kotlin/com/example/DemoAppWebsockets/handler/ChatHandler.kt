@@ -29,6 +29,7 @@ class ChatHandler : TextWebSocketHandler() {
     }
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
+      println("MESSAGE_RECEIVED")
         val json = ObjectMapper().readTree(message.payload)
         // {type: "join/say", data: "name/msg"}
         when (json.get("type").asText()) {
