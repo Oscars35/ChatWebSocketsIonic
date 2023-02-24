@@ -73,7 +73,6 @@ export class HomePage {
   }
 
   addUser(user: any) {
-    console.log(user);
     this.userList.push(user);
     this.messages.push({user: null, data: user.name + " joined chat"});
   }
