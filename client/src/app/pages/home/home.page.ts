@@ -24,6 +24,16 @@ export class HomePage {
 
   ngOnInit() {
     this.webSocketService.createSocket("http://localhost:8080/chat");
+    this.setListenersForSocket();
+  }
+
+  private setListenersForSocket() {
+    this.setOnOpen();
+    this.setOnMessage();
+    this.setOnClose();
+  }
+
+  private setOnOpen() {
     this.webSocketService.onOpen.subscribe( (opened) => {
       if (opened === "opened") {
         this.myName = "";
@@ -32,15 +42,19 @@ export class HomePage {
         setInterval(() => { this.webSocketService.send(JSON.stringify({type: "update", data: this.myName})) }, 3000);
       }
     }); 
+  }
 
+  private setOnClose() {
+    this.webSocketService.onClose.subscribe((_) => {
+
+    });
+  }
+
+  private setOnMessage() {
     this.webSocketService.onMessage.subscribe( (msg) => {
       if(msg.data) {
         this.receievMsg(JSON.parse(msg.data)) 
       }
-    });
-
-    this.webSocketService.onClose.subscribe((_) => {
-
     });
   }
 
